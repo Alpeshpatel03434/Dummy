@@ -10,7 +10,7 @@
     <link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet">
 </head>
 <body>
-
+</br></br>
 <!-- Video element with ID 'your-video-id' -->
 <video id="your-video-id" class="video-js" controls preload="auto" width="640" height="360"
        poster="your-poster-image.jpg" data-setup="{}">
@@ -22,27 +22,54 @@
 <script src="https://vjs.zencdn.net/7.15.4/video.js"></script>
 
 <script>
+</br></br>
+    
     // Video.js player setup
     var player = videojs('your-video-id');
+</br>
+</br>
+    </br>
 
+</br></br>
+
+    
     // Pause event
     player.on('pause', function() {
         console.log('Video paused at time: ' + player.currentTime());
     });
 
+
+</br></br>
+
+
+
+    
     // Ended event
     player.on('ended', function() {
         console.log('Video ended at time: ' + player.currentTime());
     });
 
+
+
+</br></br>
+
+
+    
     // Seeking event
     player.on('seeking', function() {
         console.log('Video is seeking at time: ' + player.currentTime());
     });
 
+
+</br></br>
+
+
+    
     // Disable seek controls to prevent forward seeking
     player.controlBar.progressControl.seekBar.off('mousedown');
     player.controlBar.progressControl.seekBar.off('touchstart');
+
+    </br></br>
 </script>
 
 </body>
