@@ -1,3 +1,15 @@
+
+
+cmd-
+
+ffmpeg -i input.mp4 -c:v h264 -hls_time 10 -hls_playlist_type vod -strict -2 output.m3u8
+
+</br>
+
+ffmpeg -i input.mp4 -c:v libx264 -c:a aac -strict -2 -f hls -hls_time 10 -hls_playlist_type vod output.m3u8
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
