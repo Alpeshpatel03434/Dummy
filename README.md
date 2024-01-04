@@ -1,4 +1,15 @@
+var player = videojs('my-video', {
+  plugins: {
+    videojsContribHls: {
+      enableLowInitialPlaylist: true,
+      smoothQualityChange: true,
+      recoverMediaError: true
+    }
+  }
+});
 
+
+</br>
 
 cmd-
 
