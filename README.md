@@ -1,3 +1,6 @@
+
+videojs.registerPlugin('videojs-contrib-hls', window.videojsContribHls);
+
 var player = videojs('my-video', {
   plugins: {
     videojsContribHls: {
