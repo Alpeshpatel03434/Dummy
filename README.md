@@ -1,4 +1,22 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+  <script src="https://unpkg.com/video.js/dist/video.js"></script>
+  <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
+</head>
+<body>
+
+
+
+
+  <video id="my-video" class="video-js" controls preload="auto" width="640" height="360">
+    <source src="your_playlist.m3u8" type="application/x-mpegURL">
+  </video>
+
 videojs.registerPlugin('videojs-contrib-hls', window.videojsContribHls);
 
 var player = videojs('my-video', {
