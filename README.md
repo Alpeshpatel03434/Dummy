@@ -1,3 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JW Player Example</title>
+    <!-- Include JW Player library -->
+    <script src="https://cdn.jwplayer.com/libraries/your-jwplayer-version/jwplayer.js"></script>
+</head>
+<body>
+
+<!-- JW Player container -->
+<div id="jwplayer"></div>
+
+<script>
+    // Initialize JW Player
+    jwplayer("jwplayer").setup({
+        file: "path/to/your-local-video.m3u8",
+        width: "100%",
+        aspectratio: "16:9", // Adjust this based on your video aspect ratio
+        autostart: false, // Set to true if you want the video to start playing automatically
+    });
+</script>
+
+</body>
+</html>
+
+
+
 The media could not be loaded, either because the server or network failed or because the format is not supported.
 
 
