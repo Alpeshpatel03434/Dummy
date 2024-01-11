@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <mhttp://192.168.29.46:3000/test/test.m3u8eta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Set Referrer Policy in HTML -->
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <title>Video Player</title>
+
+    <!-- External CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/video.js/5.10.2/alt/video-js-cdn.css" rel="stylesheet">
+
+    <!-- Embedded CSS -->
+    <style>
+        #url {
+            width: 100%;
+        }
+
+        #video {
+            width: 640px;
+            height: 268px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HTML Body Content -->
+
+<input type="text" id="url" value="http://192.168.29.46:3000/test/test.m3u8">
+
+ 
+    <input type="button" id="btn" value="Play">
+
+    <br><br>
+
+    <video id="video" class="video-js vjs-default-skin" preload="none" crossorigin="true" controls></video>
+
+    <!-- External JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/video.js/5.10.2/video.js"></script>
+    <script src="videojs-contrib-hls.js"></script>
+
+    <!-- Embedded JavaScript -->
+    <script>
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+
+
+const mediaElement = document.getElementById('btn');
+
+mediaElement.addEventListener('canplay', () => {
+  // Media is ready for playback, now you can call play()
+  mediaElement.play();
+});
+
+
+            document.getElementById("btn").addEventListener("click", function() {
+                var videoElement = document.getElementById("video");
+                videoElement.innerHTML = "<source src='" + document.getElementById("url").value + "' type='application/x-mpegURL'>";
+
+                var player = videojs("video");
+                player.play();
+            });
+        });
+    </script>
+</body>
+</html>
