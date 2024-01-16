@@ -1,3 +1,25 @@
+@RestController
+public class VideoController {
+
+    @GetMapping("/stream/{videoId}")
+    public ResponseEntity<Resource> streamVideo(@PathVariable String videoId) {
+        // Use your M3u8 streaming library to obtain the video stream
+        Resource videoResource = videoStreamingService.getVideoStream(videoId);
+
+        // Set appropriate headers for streaming
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.apple.mpegurl"));
+
+        // Return the ResponseEntity with the video stream
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(videoResource);
+    }
+}
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
