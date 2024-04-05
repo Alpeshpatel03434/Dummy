@@ -1,3 +1,17 @@
+ // Attach an event listener to the form submission
+    $("#myForm").submit(function(event) {
+        // Prevent the default form submission
+        event.preventDefault();
+        
+        // Show the alert
+        alert("Success");
+
+        // Submit the form
+        $("#myForm").unbind('submit').submit();
+    });
+    
+--------------------------------------------
+
 @RestController
 public class VideoController {
 
