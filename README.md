@@ -1,3 +1,46 @@
+
+ package com.example.demo.controller;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.net.MalformedURLException;
+
+@RestController
+@RequestMapping("/api/images")
+public class ImageController {
+
+    @GetMapping("/fetch")
+    public ResponseEntity<Resource> fetchImage(@RequestParam String imageUrl) {
+        try {
+            // Create a Resource from the external image URL
+            Resource resource = new UrlResource(imageUrl);
+
+            if (resource.exists() && resource.isReadable()) {
+                // Return the image as a response
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + resource.getFilename())
+                        .header(HttpHeaders.CONTENT_TYPE, "image/jpeg") // Or detect dynamically
+                        .body(resource);
+            } else {
+                // Return 404 if the image doesn't exist
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (MalformedURLException e) {
+            // Handle invalid URL errors
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+}
+ 
+ 
+ 
  // Attach an event listener to the form submission
     $("#myForm").submit(function(event) {
         // Prevent the default form submission
