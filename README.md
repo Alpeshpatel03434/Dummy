@@ -1,3 +1,49 @@
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+public class ImageListController {
+
+    @Value("${image.directory}")
+    private String imageDirectory;
+
+    @GetMapping("/images")
+    public ResponseEntity<List<String>> listImages() {
+        try {
+            // Get the list of all image file names in the directory
+            Path dirPath = Paths.get(imageDirectory);
+            List<String> imageUrls = Files.list(dirPath)
+                    .filter(Files::isRegularFile)
+                    .map(path -> "/image?filename=" + path.getFileName().toString()) // Create URLs
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(imageUrls);
+
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
  package com.example.demo.controller;
 
