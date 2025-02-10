@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Authentication in Spring Security</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        pre { background-color: #f4f4f4; padding: 10px; border-radius: 5px; }
+        h2 { color: #2c3e50; }
+    </style>
+</head>
+<body>
+    <h1>JWT Authentication in Spring Security</h1>
+
+    <h2>Dependencies (pom.xml)</h2>
+    <pre>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.jsonwebtoken&lt;/groupId&gt;
+    &lt;artifactId&gt;jjwt&lt;/artifactId&gt;
+    &lt;version&gt;0.11.5&lt;/version&gt;
+&lt;/dependency&gt;</pre>
+
+    <h2>User Entity & Repository</h2>
+    <pre>@Entity
+public class UserEntity {
+    @Id @GeneratedValue private Long id;
+    @Column(unique = true) private String username;
+    private String password;
+}
+@Repository
+public interface UserRepository extends JpaRepository&lt;UserEntity, Long&gt; {
+    Optional&lt;UserEntity&gt; findByUsername(String username);
+}</pre>
+
+    <h2>JWT Utility</h2>
+    <pre>@Component
+public class JwtUtil {
+    private final String SECRET_KEY = "my-secret-key";
+    public String generateToken(UserDetails userDetails) {
+        return Jwts.builder().setSubject(userDetails.getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
+                .compact();
+    }
+    public String extractUsername(String token) {
+        return Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                .build().parseClaimsJws(token).getBody().getSubject();
+    }
+}</pre>
+
+    <h2>Authentication Service</h2>
+    <pre>@Service
+public class UserService implements UserDetailsService {
+    @Autowired private UserRepository userRepository;
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new User(user.getUsername(), user.getPassword(), new ArrayList<>());
+    }
+}</pre>
+
+    <h2>Authentication Controller</h2>
+    <pre>@RestController @RequestMapping("/auth")
+public class AuthController {
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private JwtUtil jwtUtil;
+    @Autowired private UserService userService;
+
+    @PostMapping("/login")
+    public ResponseEntity&lt;?&gt; authenticate(@RequestBody AuthRequest request) {
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
+        return ResponseEntity.ok(new AuthResponse(jwtUtil.generateToken(userDetails)));
+    }
+}</pre>
+
+    <h2>Security Configuration</h2>
+    <pre>@Configuration @EnableWebSecurity
+public class SecurityConfig {
+    @Autowired private JwtFilter jwtFilter;
+    @Bean public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) 
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+    @Bean public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable().authorizeHttpRequests(auth -> auth.requestMatchers("/auth/login").permitAll()
+                .anyRequest().authenticated()).sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+}</pre>
+
+    <h2>API Usage</h2>
+    <ul>
+        <li><strong>Login:</strong> <code>POST /auth/login</code></li>
+        <li><strong>Use JWT Token in Headers:</strong> <code>Authorization: Bearer &lt;TOKEN&gt;</code></li>
+    </ul>
+
+</body>
+</html>
