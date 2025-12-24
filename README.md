@@ -1,3 +1,23 @@
+
+LOAD DATABASE
+     FROM mysql dump file 'backup.sql'
+     INTO postgresql://postgres:password@localhost/postgres_db
+
+ WITH include drop, create tables, create indexes, reset sequences
+
+ SET maintenance_work_mem to '512MB',
+     work_mem to '128MB';
+
+ CAST type datetime to timestamp;
+
+
+ /n/n
+
+
+
+
+
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
