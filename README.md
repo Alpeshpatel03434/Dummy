@@ -1,3 +1,43 @@
+RestTemplate restTemplate = new RestTemplate();
+
+String url = "http://localhost:8080/api/mail/send";
+
+MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+body.add("to", "user1@gmail.com");
+body.add("to", "user2@gmail.com");
+body.add("cc", "cc1@gmail.com");
+body.add("subject", "REST Mail");
+body.add("body", "<h1>Hello</h1><p>Mail via REST</p>");
+
+body.add("files", new FileSystemResource(new File("/mnt/data/report.pdf")));
+body.add("files", new FileSystemResource(new File("/mnt/data/image.png")));
+
+HttpHeaders headers = new HttpHeaders();
+headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+HttpEntity<MultiValueMap<String, Object>> requestEntity =
+        new HttpEntity<>(body, headers);
+
+ResponseEntity<String> response =
+        restTemplate.postForEntity(url, requestEntity, String.class);
+
+System.out.println(response.getBody());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 LOAD DATABASE
      FROM mysql dump file 'backup.sql'
